@@ -1,0 +1,51 @@
+<div class="device-container">
+    <button (click)="showAddDeviceForm()" class="add-device-btn">Add device</button>
+  
+    <!-- Overlay Form -->
+    <div class="overlay" *ngIf="isAddDeviceFormVisible">
+      <div class="overlay-content">
+        <h2>Add device</h2>
+        <form [formGroup]="deviceForm" (ngSubmit)="onSubmit()">
+          <div>
+            <label for="deviceId">device ID</label>
+            <input id="deviceId" formControlName="deviceId" type="number" />
+          </div>
+          <div>
+            <label for="registrationNumber">Registration Number</label>
+            <input id="registrationNumber" formControlName="registrationNumber" type="text" />
+          </div>
+          <div>
+            <label for="model">Model</label>
+            <input id="model" formControlName="model" type="text" />
+          </div>
+          <div>
+            <label for="deviceType">device Type</label>
+            <select id="deviceType" formControlName="deviceType">
+              <option *ngFor="let type of deviceTypes" [value]="type.id">{{ type.name }}</option>
+            </select>
+          </div>
+          <div>
+            <label for="isActive">Is Active</label>
+            <input id="isActive" formControlName="isActive" type="checkbox" />
+          </div>
+          <button type="submit" [disabled]="deviceForm.invalid">Save</button>
+          <button type="button" (click)="hideAddDeviceForm()">Cancel</button>
+        </form>
+      </div>
+    </div>
+  
+    <!-- device List -->
+    <div class="device-list">
+      <h3>Available devices</h3>
+      <ul>
+        <li *ngFor="let device of devices">
+          <div *ngIf="device.isActive">
+          {{ device.name }} - {{ device.properties }} ({{ device.deviceType }})
+          <button (click)="editDevice(device)">Edit</button>
+          <button (click)="deleteDevice(device.deviceId)">Delete</button>
+          </div>
+      </li>
+      </ul>
+    </div>
+  </div>
+  

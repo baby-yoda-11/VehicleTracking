@@ -1,0 +1,50 @@
+<div class="vehicle-container">
+  <button (click)="showAddVehicleForm()" class="add-vehicle-btn">Add Vehicle</button>
+
+  <!-- Overlay Form -->
+  <div class="overlay" *ngIf="isAddVehicleFormVisible">
+    <div class="overlay-content">
+      <h2>Add Vehicle</h2>
+      <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+        <div>
+          <label for="vehicleId">Vehicle ID</label>
+          <input id="vehicleId" formControlName="vehicleId" type="number" />
+        </div>
+        <div>
+          <label for="registrationNumber">Registration Number</label>
+          <input id="registrationNumber" formControlName="registrationNumber" type="text" />
+        </div>
+        <div>
+          <label for="model">Model</label>
+          <input id="model" formControlName="model" type="text" />
+        </div>
+        <div>
+          <label for="vehicleType">Vehicle Type</label>
+          <select id="vehicleType" formControlName="vehicleType">
+            <option *ngFor="let type of vehicleTypes" [value]="type.id">{{ type.name }}</option>
+          </select>
+        </div>
+        <div>
+          <label for="isActive">Is Active</label>
+          <input id="isActive" formControlName="isActive" type="checkbox" />
+        </div>
+        <button type="submit" [disabled]="vehicleForm.invalid">Save</button>
+        <button type="button" (click)="hideAddVehicleForm()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Vehicle List -->
+  <div class="vehicle-list">
+    <h3>Available Vehicles</h3>
+    <ul>
+      <li *ngFor="let vehicle of vehicles">
+        <div *ngIf="vehicle.isActive">
+        {{ vehicle.registrationNumber }} - {{ vehicle.model }} ({{ vehicle.vehicleType }})
+        <button (click)="editVehicle(vehicle)">Edit</button>
+        <button (click)="deleteVehicle(vehicle.vehicleId)">Delete</button>
+        </div>
+    </li>
+    </ul>
+  </div>
+</div>
