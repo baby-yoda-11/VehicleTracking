@@ -25,17 +25,19 @@ export class DeviceComponent {
   ) {}
     
   ngOnInit() {
-    this.vehicleTrackingService.getDeviceReferences().pipe(tap(x => {
-      if (x) {
-        this.deviceTypes = x;
-      }
-    }));
-
-    this.vehicleTrackingService.getAllDevices().pipe(tap(x => {
-      if (x) {
-        this.devices = x;
-      }
-    }));
+    this.vehicleTrackingService.getDeviceReferences().subscribe({
+      next: (x) => {
+        if(x){
+          this.deviceTypes = x;
+        }
+      }});
+      
+      this.vehicleTrackingService.getAllDevices().subscribe({
+        next: (x) => {
+          if(x){
+            this.devices = x;
+          }
+        }});
 
     this.createFormGroup();
   }
@@ -89,8 +91,8 @@ export class DeviceComponent {
       if (!deviceData.deviceId) {
         // Add new device
         this.vehicleTrackingService.addDevice(deviceData).subscribe({
-          next: (device) => {
-            this.devices.push(device);
+          next: () => {
+            this.devices.push(deviceData);
             this.hideAddDeviceForm();
           },
           error: (err) => {
@@ -100,10 +102,10 @@ export class DeviceComponent {
       } else {
         // Update existing device
         this.vehicleTrackingService.updateDevice(deviceData).subscribe({
-          next: (device: IDevice) => {
-            const index = this.devices.findIndex(d => d.deviceId === device.deviceId);
+          next: () => {
+            const index = this.devices.findIndex(d => d.deviceId === deviceData.deviceId);
             if (index !== -1) {
-              this.devices[index] = device;
+              this.devices[index] = deviceData;
             }
             this.hideAddDeviceForm();
           },

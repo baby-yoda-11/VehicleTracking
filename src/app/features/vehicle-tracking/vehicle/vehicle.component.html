@@ -21,7 +21,7 @@
         <div>
           <label for="vehicleType">Vehicle Type</label>
           <select id="vehicleType" formControlName="vehicleType">
-            <option *ngFor="let type of vehicleTypes" [value]="type.id">{{ type.name }}</option>
+            <option *ngFor="let type of vehicleTypes" [value]="type.id">{{ type.value }}</option>
           </select>
         </div>
         <div>

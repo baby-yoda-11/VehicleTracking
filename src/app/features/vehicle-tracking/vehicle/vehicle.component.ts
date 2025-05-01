@@ -24,18 +24,20 @@ export class VehicleComponent {
     private vehicleTrackingService : VehicleTrackingService) {}
     
     ngOnInit(){
-      this.vehicleTrackingService.getVehicleReferences().pipe(tap(x => {
-        if(x){
-          this.vehicleTypes = x;
-        }
-      }));
-      
-      this.vehicleTrackingService.getAllVehicles().pipe(tap(x => {
-        if(x){
-          this.vehicles = x;
-        }
-      }));
-      
+      this.vehicleTrackingService.getVehicleReferences().subscribe({
+          next: (x) => {
+            if(x){
+              this.vehicleTypes = x;
+            }
+          }});
+
+      this.vehicleTrackingService.getAllVehicles().subscribe({
+          next: (x) => {
+            if(x){
+              this.vehicles = x;
+            }
+          }});
+          
       this.createFormGroup();
     }
     
@@ -87,8 +89,8 @@ export class VehicleComponent {
         
         if (!this.isUpdate) {
         this.vehicleTrackingService.addVehicle(vehicleData).subscribe({
-          next: (vehicle) => {
-            this.vehicles.push(vehicle);
+          next: () => {
+            this.vehicles.push(vehicleData);
             this.hideAddVehicleForm();
           },
           error: (err) => {
@@ -97,10 +99,10 @@ export class VehicleComponent {
         });
       } else {
         this.vehicleTrackingService.updateVehicle(vehicleData).subscribe({
-          next: (vehicle: IVehicle) => {
-            const index = this.vehicles.findIndex(v => v.vehicleId === vehicle.vehicleId);
+          next: () => {
+            const index = this.vehicles.findIndex(v => v.vehicleId === vehicleData.vehicleId);
             if (index !== -1) {
-              this.vehicles[index] = vehicle;
+              this.vehicles[index] = vehicleData;
             }
             this.hideAddVehicleForm();
           },
@@ -110,5 +112,6 @@ export class VehicleComponent {
         });
       }
     }
+    console.log(this.vehicles);
   }
 }

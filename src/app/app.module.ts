@@ -8,9 +8,10 @@ import {
 } from './core/constants/url-constants';
 import { provideHttpClient } from '@angular/common/http';
 import { RouterOutlet } from '@angular/router';
+import { VehicleAdminComponent } from './vehicle-admin/vehicle-admin.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, VehicleAdminComponent],
   imports: [BrowserModule,AppRoutingModule],
   providers: [
     provideHttpClient(),

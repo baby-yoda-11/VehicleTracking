@@ -7,8 +7,8 @@ export const Configuration = {
     endPoints:{
         vehicle: {
             getvehicleReferences: `${Api}${Controllers.vehicle}/references`,
-            getAllVehicles: `${Api}${Controllers.vehicle}/getAllVehicles`,
-            addVehicle: `${Api}${Controllers.vehicle}/addVehicle`,
+            getAllVehicles: `${Api}${Controllers.vehicle}`,
+            addVehicle: `${Api}${Controllers.vehicle}`,
             getVehicleById: `${Api}${Controllers.vehicle}/getVehicleById`, 
             updateVehicle: `${Api}${Controllers.vehicle}/updateVehicle`,
             deleteVehicle: `${Api}${Controllers.vehicle}/deleteVehicle`,

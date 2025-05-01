@@ -14,14 +14,14 @@ export class VehicleTrackingService {
 
     // Vehicle-related functions
     getVehicleReferences(): Observable<IReference[]> {
-        return this.http.get<IReference[]>(`https://localhost:44310/${Configuration.endPoints.vehicle.getvehicleReferences}`)
+        return this.http.get<IReference[]>(`https://localhost:44385/${Configuration.endPoints.vehicle.getvehicleReferences}`)
                         .pipe(tap((res: IReference[]) => {
                             return res;
                         }));
     }
 
     getAllVehicles(): Observable<IVehicle[]> {
-        return this.http.get<IVehicle[]>(`https://localhost:44310/${Configuration.endPoints.vehicle.getAllVehicles}`)
+        return this.http.get<IVehicle[]>(`https://localhost:44385/${Configuration.endPoints.vehicle.getAllVehicles}`)
                         .pipe(tap((res: IVehicle[]) => {
                             return res;
                         }));
@@ -32,14 +32,14 @@ export class VehicleTrackingService {
     }
 
     addVehicle(vehicle: IVehicle): Observable<IVehicle> {
-        return this.http.post<IVehicle>(`https://localhost:44310/${Configuration.endPoints.vehicle.addVehicle}`, vehicle)
+        return this.http.post<IVehicle>(`https://localhost:44385/${Configuration.endPoints.vehicle.addVehicle}`, vehicle)
                         .pipe(tap((res: IVehicle) => {
                             return res;
                         }));
     }
 
     updateVehicle(vehicle: IVehicle): Observable<IVehicle> {
-        return this.http.put<IVehicle>(`https://localhost:44310/${Configuration.endPoints.vehicle.updateVehicle}/${vehicle.vehicleId}`, vehicle)
+        return this.http.put<IVehicle>(`https://localhost:44385/${Configuration.endPoints.vehicle.updateVehicle}/${vehicle.vehicleId}`, vehicle)
                         .pipe(tap((res: IVehicle) => {
                             return res;
                         }));
@@ -47,28 +47,28 @@ export class VehicleTrackingService {
 
     // Device-related functions
     getDeviceReferences(): Observable<IReference[]> {
-        return this.http.get<IReference[]>(`https://localhost:44310/${Configuration.endPoints.device.getDeviceReferences}`)
+        return this.http.get<IReference[]>(`https://localhost:44385/${Configuration.endPoints.device.getDeviceReferences}`)
                         .pipe(tap((res: IReference[]) => {
                             return res;
                         }));
     }
 
     getAllDevices(): Observable<IDevice[]> {
-        return this.http.get<IDevice[]>(`https://localhost:44310/${Configuration.endPoints.device.getAllDevices}`)
+        return this.http.get<IDevice[]>(`https://localhost:44385/${Configuration.endPoints.device.getAllDevices}`)
                         .pipe(tap((res: IDevice[]) => {
                             return res;
                         }));
     }
 
     addDevice(device: IDevice): Observable<IDevice> {
-        return this.http.post<IDevice>(`https://localhost:44310/${Configuration.endPoints.device.addDevice}`, device)
+        return this.http.post<IDevice>(`https://localhost:44385/${Configuration.endPoints.device.addDevice}`, device)
                         .pipe(tap((res: IDevice) => {
                             return res;
                         }));
     }
 
     updateDevice(device: IDevice): Observable<IDevice> {
-        return this.http.put<IDevice>(`https://localhost:44310/${Configuration.endPoints.device.updateDevice}/${device.deviceId}`, device)
+        return this.http.put<IDevice>(`https://localhost:44385/${Configuration.endPoints.device.updateDevice}/${device.deviceId}`, device)
                         .pipe(tap((res: IDevice) => {
                             return res;
                         }));
