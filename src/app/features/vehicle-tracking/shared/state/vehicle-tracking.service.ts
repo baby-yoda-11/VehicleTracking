@@ -6,6 +6,7 @@ import { VehicleTrackingRepository } from "./vehicle-tracking.repository";
 import { Configuration } from "../../vehicleTracking.configuration";
 import { IVehicle } from "../../models/vehicle";
 import { IDevice } from "../../models/device";
+import { pairingModel } from "../../models/pairingModel";
 
 @Injectable({ providedIn: 'root' })
 export class VehicleTrackingService {
@@ -60,17 +61,42 @@ export class VehicleTrackingService {
                         }));
     }
 
+    
+    
     addDevice(device: IDevice): Observable<IDevice> {
         return this.http.post<IDevice>(`https://localhost:44385/${Configuration.endPoints.device.addDevice}`, device)
-                        .pipe(tap((res: IDevice) => {
+        .pipe(tap((res: IDevice) => {
+            return res;
+        }));
+    }
+    
+    updateDevice(device: IDevice): Observable<IDevice> {
+        return this.http.put<IDevice>(`https://localhost:44385/${Configuration.endPoints.device.updateDevice}/${device.deviceId}`, device)
+        .pipe(tap((res: IDevice) => {
+            return res;
+        }));
+    }
+    
+    getUnpairedDevices(): Observable<IDevice[]> {
+        return this.http.get<IDevice[]>(`https://localhost:44385/${Configuration.endPoints.vehicleDevice.getUnpairedDevices}`)
+                        .pipe(tap((res: IDevice[]) => {
                             return res;
                         }));
     }
 
-    updateDevice(device: IDevice): Observable<IDevice> {
-        return this.http.put<IDevice>(`https://localhost:44385/${Configuration.endPoints.device.updateDevice}/${device.deviceId}`, device)
-                        .pipe(tap((res: IDevice) => {
+    getVehicleDevices(): Observable<IDevice[]> {
+        return this.http.get<IDevice[]>(`https://localhost:44385/${Configuration.endPoints.vehicleDevice.getVehicleDevices}`)
+                        .pipe(tap((res: IDevice[]) => {
                             return res;
                         }));
     }
+
+    assignDevice(vehicleDevice: pairingModel){
+        return this.http.post(`https://localhost:44385/${Configuration.endPoints.vehicleDevice.assignDevice}`, vehicleDevice);
+    }
+
+    deassignDevice(vehicleDevice: pairingModel){
+        return this.http.post(`https://localhost:44385/${Configuration.endPoints.vehicleDevice.assignDevice}`, vehicleDevice);
+    }
+
 }

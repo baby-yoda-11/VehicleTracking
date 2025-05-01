@@ -1,1 +1,34 @@
-<p>vehicle-admin works!</p>
+<div class="vehicle-list">
+  <h2>Vehicle List</h2>
+  <ul>
+    <li *ngFor="let vehicle of vehicles">
+      <span>{{ vehicle.registrationNumber }}</span>
+      <button (click)="fetchAvailableDevices(vehicle.vehicleId)">Assign</button>
+      <button (click)="fetchPairedDevices(vehicle.vehicleId)">Deassign</button>
+    </li>
+  </ul>
+</div>
+
+<!-- Modal for assigning a device -->
+<div *ngIf="availableDevices.length > 0" class="modal">
+  <h3>Select a device to assign</h3>
+  <ul>
+    <li *ngFor="let device of availableDevices">
+      <span>{{ device.name }}</span>
+      <button (click)="assignDevice(device.deviceId)">Assign</button>
+    </li>
+  </ul>
+</div>
+
+<!-- Modal for deassigning a device -->
+<div *ngIf="pairedDevices.length > 0" class="modal">
+  <h3>Select a device to deassign</h3>
+  <ul>
+    <li *ngFor="let device of pairedDevices">
+      <span>{{ device.name }}</span>
+      <button (click)="deassignDevice(device.deviceId)">Deassign</button>
+    </li>
+  </ul>
+</div>
+<app-vehicle></app-vehicle>
+<app-device></app-device>

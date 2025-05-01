@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { VehicleTrackingService } from '../features/vehicle-tracking/shared/state/vehicle-tracking.service';
 import { pairingModel } from '../features/vehicle-tracking/models/pairingModel';
+import { IVehicle } from '../features/vehicle-tracking/models/vehicle';
+import { IDevice } from '../features/vehicle-tracking/models/device';
 
 @Component({
   selector: 'app-vehicle-admin',
@@ -9,20 +11,19 @@ import { pairingModel } from '../features/vehicle-tracking/models/pairingModel';
   styleUrls: ['./vehicle-admin.component.scss']
 })
 export class VehicleAdminComponent implements OnInit {
-  vehicles: any[] = []; // List of vehicles
-  availableDevices: any[] = []; // List of available devices for pairing
-  pairedDevices: any[] = []; // List of paired devices for unpairing
-  selectedVehicleId: number | null = null; // Vehicle selected for pairing/unpairing
+  vehicles: IVehicle[] = [];
+  availableDevices: IDevice[] = [];
+  pairedDevices: IDevice[] = [];
+  selectedVehicleId: number | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private vehicleTrackingService: VehicleTrackingService) {}
 
   ngOnInit(): void {
     this.fetchVehicles();
   }
 
   fetchVehicles(): void {
-    // Replace with your API endpoint to fetch vehicles
-    this.http.get<any[]>('/api/vehicles').subscribe(
+    this.vehicleTrackingService.getAllVehicles().subscribe(
       (data) => {
         this.vehicles = data;
       }
@@ -31,26 +32,18 @@ export class VehicleAdminComponent implements OnInit {
 
   fetchAvailableDevices(vehicleId: number): void {
     this.selectedVehicleId = vehicleId;
-    // Replace with your API endpoint to fetch available devices
-    this.http.get<any[]>('/api/devices/available').subscribe(
+    this.vehicleTrackingService.getUnpairedDevices().subscribe(
       (data) => {
-        this.availableDevices = data;
-      },
-      (error) => {
-        console.error('Error fetching available devices:', error);
+        this.availableDevices = data; // Assuming this endpoint returns available devices
       }
     );
   }
 
   fetchPairedDevices(vehicleId: number): void {
     this.selectedVehicleId = vehicleId;
-    // Replace with your API endpoint to fetch paired devices
-    this.http.get<any[]>(`/api/vehicles/${vehicleId}/paired-devices`).subscribe(
+    this.vehicleTrackingService.getVehicleDevices().subscribe(
       (data) => {
-        this.pairedDevices = data;
-      },
-      (error) => {
-        console.error('Error fetching paired devices:', error);
+        this.pairedDevices = data; // Assuming this endpoint returns paired devices
       }
     );
   }
@@ -63,15 +56,11 @@ export class VehicleAdminComponent implements OnInit {
       deviceId: deviceId
     };
 
-    // Replace with your API endpoint for assigning a device
-    this.http.post('/api/vehicles/pair', pairing).subscribe(
+    this.vehicleTrackingService.assignDevice(pairing as any).subscribe(
       () => {
         console.log(`Device ${deviceId} assigned to vehicle ${this.selectedVehicleId} successfully.`);
         this.availableDevices = [];
         this.selectedVehicleId = null;
-      },
-      (error) => {
-        console.error(`Error assigning device ${deviceId}:`, error);
       }
     );
   }
@@ -84,15 +73,11 @@ export class VehicleAdminComponent implements OnInit {
       deviceId: deviceId
     };
 
-    // Replace with your API endpoint for deassigning a device
-    this.http.post('/api/vehicles/unpair', pairing).subscribe(
+    this.vehicleTrackingService.deassignDevice(pairing as any).subscribe(
       () => {
         console.log(`Device ${deviceId} unpaired from vehicle ${this.selectedVehicleId} successfully.`);
         this.pairedDevices = [];
         this.selectedVehicleId = null;
-      },
-      (error) => {
-        console.error(`Error unpairing device ${deviceId}:`, error);
       }
     );
   }

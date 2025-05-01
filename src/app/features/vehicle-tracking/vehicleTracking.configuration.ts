@@ -20,6 +20,12 @@ export const Configuration = {
             getDeviceById: `${Api}${Controllers.device}/getDeviceById`,
             updateDevice: `${Api}${Controllers.device}/updateDevice`,
             deleteDevice: `${Api}${Controllers.device}/deleteDevice`,
+        },
+        vehicleDevice: {
+            getUnpairedDevices: `${Api}${Controllers.vehicle}/getUnpairedDevices`,
+            getVehicleDevices: `${Api}${Controllers.vehicle}/getVehicleDevices`,
+            assignDevice: `${Api}${Controllers.vehicle}/assignDevice`,
+            updateDevice: `${Api}${Controllers.vehicle}/updateDevice`
         }
         
     }
