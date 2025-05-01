@@ -11,7 +11,7 @@ import { RouterOutlet } from '@angular/router';
 import { VehicleAdminComponent } from './vehicle-admin/vehicle-admin.component';
 
 @NgModule({
-  declarations: [AppComponent, VehicleAdminComponent],
+  declarations: [AppComponent],
   imports: [BrowserModule,AppRoutingModule],
   providers: [
     provideHttpClient(),

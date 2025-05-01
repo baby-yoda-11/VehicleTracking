@@ -4,6 +4,7 @@ import { pairingModel } from '../features/vehicle-tracking/models/pairingModel';
 
 @Component({
   selector: 'app-vehicle-admin',
+  standalone: false,
   templateUrl: './vehicle-admin.component.html',
   styleUrls: ['./vehicle-admin.component.scss']
 })

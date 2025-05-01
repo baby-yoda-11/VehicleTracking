@@ -5,11 +5,13 @@ import { VehicleTrackingComponentsRoutingModule } from './vehicleTracking-routin
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DeviceComponent } from './device/device.component';
+import { VehicleAdminComponent } from '../../vehicle-admin/vehicle-admin.component';
 
 @NgModule({
     declarations: [
         VehicleComponent,
-        DeviceComponent
+        DeviceComponent,
+        VehicleAdminComponent
     ],
     imports: [
         CommonModule,
