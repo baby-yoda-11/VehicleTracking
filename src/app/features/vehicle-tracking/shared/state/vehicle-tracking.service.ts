@@ -15,7 +15,7 @@ export class VehicleTrackingService {
 
     // Vehicle-related functions
     getVehicleReferences(): Observable<IReference[]> {
-        return this.http.get<IReference[]>(`https://localhost:44385/${Configuration.endPoints.vehicle.getvehicleReferences}`)
+        return this.http.get<IReference[]>(`https://localhost:44385/${Configuration.endPoints.vehicle.getVehicleReferences}`)
                         .pipe(tap((res: IReference[]) => {
                             return res;
                         }));
@@ -24,6 +24,13 @@ export class VehicleTrackingService {
     getAllVehicles(): Observable<IVehicle[]> {
         return this.http.get<IVehicle[]>(`https://localhost:44385/${Configuration.endPoints.vehicle.getAllVehicles}`)
                         .pipe(tap((res: IVehicle[]) => {
+                            return res;
+                        }));
+    }
+
+    getVehicleById(id : number): Observable<IVehicle> {
+        return this.http.get<IVehicle>(`https://localhost:44385/${Configuration.endPoints.vehicle.getVehicleById(id)}`)
+                        .pipe(tap((res: IVehicle) => {
                             return res;
                         }));
     }
@@ -40,10 +47,14 @@ export class VehicleTrackingService {
     }
 
     updateVehicle(vehicle: IVehicle): Observable<IVehicle> {
-        return this.http.put<IVehicle>(`https://localhost:44385/${Configuration.endPoints.vehicle.updateVehicle}/${vehicle.vehicleId}`, vehicle)
+        return this.http.put<IVehicle>(`https://localhost:44385/${Configuration.endPoints.vehicle.updateVehicle(vehicle.vehicleId)}`, vehicle)
                         .pipe(tap((res: IVehicle) => {
                             return res;
                         }));
+    }
+
+    deleteVehicle(vehicle: IVehicle): Observable<IVehicle> {
+        return this.http.delete<IVehicle>(`https://localhost:44385/${Configuration.endPoints.vehicle.deleteVehicle(vehicle.vehicleId)}`);
     }
 
     // Device-related functions
@@ -54,14 +65,19 @@ export class VehicleTrackingService {
                         }));
     }
 
-    getAllDevices(): Observable<IDevice[]> {
-        return this.http.get<IDevice[]>(`https://localhost:44385/${Configuration.endPoints.device.getAllDevices}`)
-                        .pipe(tap((res: IDevice[]) => {
+    getAllDevices(): Observable<any> {
+        return this.http.get<any>(`https://localhost:44385/${Configuration.endPoints.device.getAllDevices}`)
+                        .pipe(tap((res: any) => {
                             return res;
                         }));
     }
 
-    
+    getDeviceById(id : number): Observable<IVehicle> {
+        return this.http.get<IVehicle>(`https://localhost:44385/${Configuration.endPoints.device.getDeviceById(id)}`)
+                        .pipe(tap((res: IVehicle) => {
+                            return res;
+                        }));
+    }
     
     addDevice(device: IDevice): Observable<IDevice> {
         return this.http.post<IDevice>(`https://localhost:44385/${Configuration.endPoints.device.addDevice}`, device)
@@ -77,6 +93,13 @@ export class VehicleTrackingService {
         }));
     }
     
+    deleteDevice(id : number): any {
+        return this.http.delete<IDevice>(`https://localhost:44385/${Configuration.endPoints.device.deleteDevice(id)}`)
+        .pipe(tap((res: IDevice) => {
+            return res;
+        }));
+    }
+
     getUnpairedDevices(): Observable<IDevice[]> {
         return this.http.get<IDevice[]>(`https://localhost:44385/${Configuration.endPoints.vehicleDevice.getUnpairedDevices}`)
                         .pipe(tap((res: IDevice[]) => {
@@ -84,8 +107,8 @@ export class VehicleTrackingService {
                         }));
     }
 
-    getVehicleDevices(): Observable<IDevice[]> {
-        return this.http.get<IDevice[]>(`https://localhost:44385/${Configuration.endPoints.vehicleDevice.getVehicleDevices}`)
+    getVehicleDevices(id : number): Observable<IDevice[]> {
+        return this.http.get<IDevice[]>(`https://localhost:44385/${Configuration.endPoints.vehicleDevice.getVehicleDevices(id)}`)
                         .pipe(tap((res: IDevice[]) => {
                             return res;
                         }));
@@ -96,7 +119,7 @@ export class VehicleTrackingService {
     }
 
     deassignDevice(vehicleDevice: pairingModel){
-        return this.http.post(`https://localhost:44385/${Configuration.endPoints.vehicleDevice.assignDevice}`, vehicleDevice);
+        return this.http.post(`https://localhost:44385/${Configuration.endPoints.vehicleDevice.deassignDevice}`, vehicleDevice);
     }
 
 }

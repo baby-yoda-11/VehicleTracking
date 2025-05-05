@@ -9,10 +9,16 @@ import {
 import { provideHttpClient } from '@angular/common/http';
 import { RouterOutlet } from '@angular/router';
 import { VehicleAdminComponent } from './vehicle-admin/vehicle-admin.component';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule,AppRoutingModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
+  ],
   providers: [
     provideHttpClient(),
   ],

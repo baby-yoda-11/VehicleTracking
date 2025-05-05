@@ -6,12 +6,14 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { ReactiveFormsModule } from '@angular/forms';
 import { DeviceComponent } from './device/device.component';
 import { VehicleAdminComponent } from '../../vehicle-admin/vehicle-admin.component';
+import { VehicleMapComponent } from './vehicle-map/vehicle-map.component';
 
 @NgModule({
     declarations: [
         VehicleComponent,
         DeviceComponent,
-        VehicleAdminComponent
+        VehicleAdminComponent,
+        VehicleMapComponent
     ],
     imports: [
         CommonModule,

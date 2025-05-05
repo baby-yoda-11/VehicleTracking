@@ -7,12 +7,11 @@
         <h2>Add device</h2>
         <form [formGroup]="deviceForm" (ngSubmit)="onSubmit()">
           <div>
-            <label for="deviceId">device ID</label>
-            <input id="deviceId" formControlName="deviceId" type="number" />
-          </div>
-          <div>
             <label for="properties">Properties</label>
-            <input id="properties" formControlName="properties" type="text" />
+            <textarea id="properties" formControlName="properties"></textarea>
+            <div *ngIf="deviceForm.get('properties')?.hasError('invalidJson') && deviceForm.get('properties')?.touched">
+              <small class="error">Invalid JSON format</small>
+            </div>
           </div>
           <div>
             <label for="name">Name</label>
@@ -24,28 +23,22 @@
               <option *ngFor="let type of deviceTypes" [value]="type.id">{{ type.value }}</option>
             </select>
           </div>
-          <div>
-            <label for="isActive">Is Active</label>
-            <input id="isActive" formControlName="isActive" type="checkbox" />
-          </div>
           <button type="submit" [disabled]="deviceForm.invalid">Save</button>
           <button type="button" (click)="hideAddDeviceForm()">Cancel</button>
         </form>
       </div>
-    </div>
-  
-    <!-- device List -->
-    <div class="device-list">
-      <h3>Available devices</h3>
-      <ul>
-        <li *ngFor="let device of devices">
-          <div *ngIf="device.isActive">
-          {{ device.name }} - {{ device.properties }} ({{ device.deviceType }})
-          <button (click)="editDevice(device)">Edit</button>
-          <button (click)="deleteDevice(device.deviceId)">Delete</button>
-          </div>
-      </li>
-      </ul>
+      <!-- Device List -->
     </div>
   </div>
-  
+  <div class="device-list">
+    <h3>Available Devices</h3>
+    <ul>
+    <li *ngFor="let device of devices">
+      <strong>{{ device.name }}</strong> - 
+      Properties: {{ device.properties}} ,
+      (Type: {{getDeviceType(device.deviceType)}} {{ device.deviceType }})
+      <button (click)="editDevice(device.deviceId)">Edit</button>
+      <button (click)="deleteDevice(device.deviceId)">Delete</button>
+    </li>
+  </ul>
+</div>

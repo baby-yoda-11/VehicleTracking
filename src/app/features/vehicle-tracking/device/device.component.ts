@@ -4,89 +4,95 @@ import { VehicleTrackingService } from '../shared/state/vehicle-tracking.service
 import { tap } from 'rxjs';
 import { IReference } from '../models/reference';
 import { IDevice } from '../models/device';
+import { jsonValidator } from '../shared/validators/jsonValidator';
 
 @Component({
   selector: 'app-device',
   templateUrl: './device.component.html',
-  styleUrl: './device.component.scss',
+  styleUrls: ['./device.component.scss'],
   standalone: false
 })
 export class DeviceComponent {
-  
   deviceForm!: UntypedFormGroup;
   deviceTypes: IReference[] = [];
   devices: IDevice[] = [];
   isAddDeviceFormVisible = false;
   isUpdate = false;
-  
+  selectedDeviceId?: number;
+
   constructor(
     private fb: UntypedFormBuilder,
     private vehicleTrackingService: VehicleTrackingService
   ) {}
-    
+
+  getDeviceType(type: number) {
+    return this.deviceTypes.find((x) => x.id === type)?.value;
+  }
   ngOnInit() {
     this.vehicleTrackingService.getDeviceReferences().subscribe({
       next: (x) => {
-        if(x){
+        if (x) {
           this.deviceTypes = x;
         }
-      }});
-      
-      this.vehicleTrackingService.getAllDevices().subscribe({
-        next: (x) => {
-          if(x){
-            this.devices = x;
-          }
-        }});
+      }
+    });
+
+    this.vehicleTrackingService.getAllDevices().subscribe({
+      next: (x) => {
+        if (x) {
+          this.devices = x;
+      }
+    }});
 
     this.createFormGroup();
   }
-    
+
   createFormGroup(): void {
     this.deviceForm = this.fb.group({
-      deviceId: [null, [Validators.required]],
-      properties: ['', [Validators.required, Validators.maxLength(100)]],
+      properties: ['', [Validators.required, jsonValidator, Validators.maxLength(150)]],
       name: ['', [Validators.required, Validators.maxLength(50)]],
-      deviceType: [null, [Validators.required]],
-      isActive: [true, [Validators.required]],
-      isDeleted: [false]
+      deviceType: [null, [Validators.required]]
     });
   }
-    
+
   showAddDeviceForm(): void {
     this.isUpdate = false;
     this.isAddDeviceFormVisible = true;
   }
-    
+
   hideAddDeviceForm(): void {
     this.isAddDeviceFormVisible = false;
     this.deviceForm.reset();
   }
-    
-  editDevice(device: IDevice): void {
+
+  editDevice(deviceId: number): void {
+    this.selectedDeviceId = deviceId;
     this.isUpdate = true;
     this.isAddDeviceFormVisible = true;
-    this.deviceForm.patchValue(device);
+    this.vehicleTrackingService.getDeviceById(this.selectedDeviceId).subscribe({
+      next: (x) => {
+            this.deviceForm.patchValue(x);
+        }
+    });
   }
-    
+
   deleteDevice(id: number): void {
-    const index = this.devices.findIndex(d => d.deviceId === id);
+    const index = this.devices.findIndex((d) => d.deviceId === id);
     if (index !== -1) {
       this.devices[index].isDeleted = true;
-      this.vehicleTrackingService.updateDevice(this.devices[index]).subscribe({
+      this.vehicleTrackingService.deleteDevice(this.devices[index].deviceId).subscribe({
         next: () => {
           this.devices.splice(index, 1);
-        },
-        error: (err) => {
-          console.error('Error deleting device:', err);
         }
       });
     }
   }
-    
+  
   onSubmit(): void {
     if (this.deviceForm.valid) {
       const deviceData: IDevice = this.deviceForm.value;
+      // deviceData.properties = JSON.parse(deviceData.properties); // Parse the JSON before submitting
+      deviceData.deviceId = this.selectedDeviceId || 0;
 
       if (!deviceData.deviceId) {
         // Add new device
@@ -103,7 +109,7 @@ export class DeviceComponent {
         // Update existing device
         this.vehicleTrackingService.updateDevice(deviceData).subscribe({
           next: () => {
-            const index = this.devices.findIndex(d => d.deviceId === deviceData.deviceId);
+            const index = this.devices.findIndex((d) => d.deviceId === deviceData.deviceId);
             if (index !== -1) {
               this.devices[index] = deviceData;
             }

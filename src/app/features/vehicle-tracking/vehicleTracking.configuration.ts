@@ -2,31 +2,31 @@ export const Api = 'api/v1';
 export const Controllers = {
     vehicle: '/vehicle',
     device: '/device',
+    vehicleDevice: '/vehicleDevice',
   };
 export const Configuration = {
     endPoints:{
         vehicle: {
-            getvehicleReferences: `${Api}${Controllers.vehicle}/references`,
             getAllVehicles: `${Api}${Controllers.vehicle}`,
+            getVehicleById : (id : number) => `${Api}${Controllers.vehicle}/${id}`, 
             addVehicle: `${Api}${Controllers.vehicle}`,
-            getVehicleById: `${Api}${Controllers.vehicle}/getVehicleById`, 
-            updateVehicle: `${Api}${Controllers.vehicle}/updateVehicle`,
-            deleteVehicle: `${Api}${Controllers.vehicle}/deleteVehicle`,
+            updateVehicle : (id : number) => `${Api}${Controllers.vehicle}/${id}`,
+            deleteVehicle : (id : number) => `${Api}${Controllers.vehicle}/${id}`,
+            getVehicleReferences: `${Api}${Controllers.vehicle}/references`,
         },
         device: {
+            getAllDevices: `${Api}${Controllers.device}`,
+            getDeviceById : (id : number) => `${Api}${Controllers.device}/${id}`, 
+            addDevice: `${Api}${Controllers.device}`,
+            updateDevice : (id : number) => `${Api}${Controllers.device}/${id}`,
+            deleteDevice : (id : number) => `${Api}${Controllers.device}/${id}`,
             getDeviceReferences: `${Api}${Controllers.device}/references`,
-            getAllDevices: `${Api}${Controllers.device}/getAllDevices`,
-            addDevice: `${Api}${Controllers.device}/addDevice`,
-            getDeviceById: `${Api}${Controllers.device}/getDeviceById`,
-            updateDevice: `${Api}${Controllers.device}/updateDevice`,
-            deleteDevice: `${Api}${Controllers.device}/deleteDevice`,
         },
         vehicleDevice: {
-            getUnpairedDevices: `${Api}${Controllers.vehicle}/getUnpairedDevices`,
-            getVehicleDevices: `${Api}${Controllers.vehicle}/getVehicleDevices`,
-            assignDevice: `${Api}${Controllers.vehicle}/assignDevice`,
-            updateDevice: `${Api}${Controllers.vehicle}/updateDevice`
+            getUnpairedDevices: `${Api}${Controllers.vehicleDevice}/getUnpairedDevices`,
+            getVehicleDevices : (id : number) => `${Api}${Controllers.vehicleDevice}/${id}`,
+            assignDevice: `${Api}${Controllers.vehicleDevice}/assignDevice`,
+            deassignDevice: `${Api}${Controllers.vehicleDevice}/deassignDevice`,
         }
-        
     }
 }

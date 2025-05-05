@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { VehicleTrackingService } from '../shared/state/vehicle-tracking.service';
-import { tap } from 'rxjs';
 import { IReference } from '../models/reference';
 import { IVehicle } from '../models/vehicle';
 
@@ -18,7 +17,8 @@ export class VehicleComponent {
   vehicles: IVehicle[] = [];
   isAddVehicleFormVisible = false;
   isUpdate = false;
-  
+  selectedVehicleId?: number;
+
   constructor(
     private fb: UntypedFormBuilder,
     private vehicleTrackingService : VehicleTrackingService) {}
@@ -43,12 +43,9 @@ export class VehicleComponent {
     
     createFormGroup(): void {
       this.vehicleForm = this.fb.group({
-        vehicleId: [null, [Validators.required]],
         registrationNumber: ['', [Validators.required, Validators.maxLength(50)]],
         model: ['', [Validators.required, Validators.maxLength(100)]],
         vehicleType: [null, [Validators.required]],
-        isActive: [true, [Validators.required]],
-        isDeleted: [false]
       });
     }
     
@@ -63,16 +60,21 @@ export class VehicleComponent {
     }
     
     editVehicle(vehicle: IVehicle): void {
+      this.selectedVehicleId = vehicle.vehicleId;
       this.isUpdate = true;
       this.isAddVehicleFormVisible = true;
-      this.vehicleForm.patchValue(vehicle);
+      this.vehicleTrackingService.getVehicleById(this.selectedVehicleId).subscribe({
+        next: (x) => {
+              this.vehicleForm.patchValue(x);
+          }
+      });
     }
     
     deleteVehicle(id: number) {
       const index = this.vehicles.findIndex(v => v.vehicleId === id);
       if (index !== -1) {
         this.vehicles[index].isDeleted = true;
-        this.vehicleTrackingService.updateVehicle(this.vehicles[index]).subscribe({
+        this.vehicleTrackingService.deleteVehicle(this.vehicles[index]).subscribe({
           next: () => {
             this.vehicles.splice(index, 1);
           },
@@ -86,7 +88,7 @@ export class VehicleComponent {
     onSubmit(): void {
       if (this.vehicleForm.valid) {
         const vehicleData: IVehicle = this.vehicleForm.value;
-        
+        vehicleData.vehicleId = this.selectedVehicleId || 0; // Set vehicleId to 0 for new vehicles
         if (!this.isUpdate) {
         this.vehicleTrackingService.addVehicle(vehicleData).subscribe({
           next: () => {
@@ -112,6 +114,5 @@ export class VehicleComponent {
         });
       }
     }
-    console.log(this.vehicles);
   }
 }

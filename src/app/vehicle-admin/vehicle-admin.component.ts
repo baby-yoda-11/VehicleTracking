@@ -3,6 +3,7 @@ import { VehicleTrackingService } from '../features/vehicle-tracking/shared/stat
 import { pairingModel } from '../features/vehicle-tracking/models/pairingModel';
 import { IVehicle } from '../features/vehicle-tracking/models/vehicle';
 import { IDevice } from '../features/vehicle-tracking/models/device';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-vehicle-admin',
@@ -15,8 +16,12 @@ export class VehicleAdminComponent implements OnInit {
   availableDevices: IDevice[] = [];
   pairedDevices: IDevice[] = [];
   selectedVehicleId: number | null = null;
+  trackingVehicleId: number | null = null;
 
-  constructor(private vehicleTrackingService: VehicleTrackingService) {}
+  constructor(
+    private vehicleTrackingService: VehicleTrackingService,
+    private toastr : ToastrService
+  ){}
 
   ngOnInit(): void {
     this.fetchVehicles();
@@ -41,7 +46,7 @@ export class VehicleAdminComponent implements OnInit {
 
   fetchPairedDevices(vehicleId: number): void {
     this.selectedVehicleId = vehicleId;
-    this.vehicleTrackingService.getVehicleDevices().subscribe(
+    this.vehicleTrackingService.getVehicleDevices(vehicleId).subscribe(
       (data) => {
         this.pairedDevices = data; // Assuming this endpoint returns paired devices
       }
@@ -58,7 +63,7 @@ export class VehicleAdminComponent implements OnInit {
 
     this.vehicleTrackingService.assignDevice(pairing as any).subscribe(
       () => {
-        console.log(`Device ${deviceId} assigned to vehicle ${this.selectedVehicleId} successfully.`);
+        this.toastr.success(`Device ${deviceId} assigned to vehicle ${this.selectedVehicleId} successfully.`, 'Success');
         this.availableDevices = [];
         this.selectedVehicleId = null;
       }
@@ -75,10 +80,16 @@ export class VehicleAdminComponent implements OnInit {
 
     this.vehicleTrackingService.deassignDevice(pairing as any).subscribe(
       () => {
-        console.log(`Device ${deviceId} unpaired from vehicle ${this.selectedVehicleId} successfully.`);
+        this.toastr.success(`Device ${deviceId} unpaired from vehicle ${this.selectedVehicleId} successfully.`, 'Success');
         this.pairedDevices = [];
         this.selectedVehicleId = null;
       }
     );
+  }
+
+  onVehicleSelect(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const vehicleId = selectElement?.value || '';
+    this.trackingVehicleId = parseInt(vehicleId, 10);
   }
 }
