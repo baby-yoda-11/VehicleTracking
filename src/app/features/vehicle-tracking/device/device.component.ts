@@ -65,8 +65,8 @@ export class DeviceComponent {
     this.deviceForm.reset();
   }
 
-  editDevice(deviceId: number): void {
-    this.selectedDeviceId = deviceId;
+  editDevice(deviceUId: number): void {
+    this.selectedDeviceId = deviceUId;
     this.isUpdate = true;
     this.isAddDeviceFormVisible = true;
     this.vehicleTrackingService.getDeviceById(this.selectedDeviceId).subscribe({
@@ -77,10 +77,10 @@ export class DeviceComponent {
   }
 
   deleteDevice(id: number): void {
-    const index = this.devices.findIndex((d) => d.deviceId === id);
+    const index = this.devices.findIndex((d) => d.deviceUId === id);
     if (index !== -1) {
       this.devices[index].isDeleted = true;
-      this.vehicleTrackingService.deleteDevice(this.devices[index].deviceId).subscribe({
+      this.vehicleTrackingService.deleteDevice(this.devices[index].deviceUId).subscribe({
         next: () => {
           this.devices.splice(index, 1);
         }
@@ -92,9 +92,9 @@ export class DeviceComponent {
     if (this.deviceForm.valid) {
       const deviceData: IDevice = this.deviceForm.value;
       // deviceData.properties = JSON.parse(deviceData.properties); // Parse the JSON before submitting
-      deviceData.deviceId = this.selectedDeviceId || 0;
+      deviceData.deviceUId = this.selectedDeviceId || 0;
 
-      if (!deviceData.deviceId) {
+      if (!deviceData.deviceUId) {
         // Add new device
         this.vehicleTrackingService.addDevice(deviceData).subscribe({
           next: () => {
@@ -109,7 +109,7 @@ export class DeviceComponent {
         // Update existing device
         this.vehicleTrackingService.updateDevice(deviceData).subscribe({
           next: () => {
-            const index = this.devices.findIndex((d) => d.deviceId === deviceData.deviceId);
+            const index = this.devices.findIndex((d) => d.deviceUId === deviceData.deviceUId);
             if (index !== -1) {
               this.devices[index] = deviceData;
             }

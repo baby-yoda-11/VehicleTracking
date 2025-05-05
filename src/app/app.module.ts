@@ -8,7 +8,6 @@ import {
 } from './core/constants/url-constants';
 import { provideHttpClient } from '@angular/common/http';
 import { RouterOutlet } from '@angular/router';
-import { VehicleAdminComponent } from './vehicle-admin/vehicle-admin.component';
 import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({

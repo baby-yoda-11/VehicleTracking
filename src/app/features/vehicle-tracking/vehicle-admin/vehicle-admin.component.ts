@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { VehicleTrackingService } from '../features/vehicle-tracking/shared/state/vehicle-tracking.service';
-import { pairingModel } from '../features/vehicle-tracking/models/pairingModel';
-import { IVehicle } from '../features/vehicle-tracking/models/vehicle';
-import { IDevice } from '../features/vehicle-tracking/models/device';
+import { VehicleTrackingService } from '../shared/state/vehicle-tracking.service';
+import { pairingModel } from '../models/pairingModel';
+import { IVehicle } from '../models/vehicle';
+import { IDevice } from '../models/device';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

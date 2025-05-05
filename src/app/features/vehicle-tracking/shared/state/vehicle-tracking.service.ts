@@ -87,7 +87,7 @@ export class VehicleTrackingService {
     }
     
     updateDevice(device: IDevice): Observable<IDevice> {
-        return this.http.put<IDevice>(`https://localhost:44385/${Configuration.endPoints.device.updateDevice}/${device.deviceId}`, device)
+        return this.http.put<IDevice>(`https://localhost:44385/${Configuration.endPoints.device.updateDevice}/${device.deviceUId}`, device)
         .pipe(tap((res: IDevice) => {
             return res;
         }));

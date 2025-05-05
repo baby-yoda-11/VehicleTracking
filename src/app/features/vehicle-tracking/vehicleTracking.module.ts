@@ -5,20 +5,22 @@ import { VehicleTrackingComponentsRoutingModule } from './vehicleTracking-routin
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DeviceComponent } from './device/device.component';
-import { VehicleAdminComponent } from '../../vehicle-admin/vehicle-admin.component';
+import { VehicleAdminComponent } from './vehicle-admin/vehicle-admin.component';
 import { VehicleMapComponent } from './vehicle-map/vehicle-map.component';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
     declarations: [
         VehicleComponent,
         DeviceComponent,
         VehicleAdminComponent,
-        VehicleMapComponent
+        VehicleMapComponent,
     ],
     imports: [
         CommonModule,
         VehicleTrackingComponentsRoutingModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        GoogleMapsModule
     ],
     providers: [
         provideHttpClient(withInterceptorsFromDi()),

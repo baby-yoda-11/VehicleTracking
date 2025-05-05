@@ -1,5 +1,5 @@
 export interface IDevice {
-    deviceId : number;
+    deviceUId : number;
     properties : string;
     name : string;
     deviceType : number;

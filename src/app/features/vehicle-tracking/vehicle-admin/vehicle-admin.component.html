@@ -15,7 +15,7 @@
   <ul>
     <li *ngFor="let device of availableDevices">
       <span>{{ device.name }}</span>
-      <button (click)="assignDevice(device.deviceId)">Assign</button>
+      <button (click)="assignDevice(device.deviceUId)">Assign</button>
     </li>
   </ul>
 </div>
@@ -26,7 +26,7 @@
   <ul>
     <li *ngFor="let device of pairedDevices">
       <span>{{ device.name }}</span>
-      <button (click)="deassignDevice(device.deviceId)">Deassign</button>
+      <button (click)="deassignDevice(device.deviceUId)">Deassign</button>
     </li>
   </ul>
 </div>
