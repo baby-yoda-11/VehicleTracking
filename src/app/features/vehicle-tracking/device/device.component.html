@@ -44,8 +44,8 @@
       <strong>{{ device.name }}</strong> - 
       Properties: {{ device.properties}} ,
       (Type: {{getDeviceType(device.deviceType)}} {{ device.deviceType }})
-      <button (click)="editDevice(device.Id)">Edit</button>
-      <button (click)="deleteDevice(device.Id)">Delete</button>
+      <button (click)="editDevice(device.id)">Edit</button>
+      <button (click)="deleteDevice(device.id)">Delete</button>
     </li>
   </ul>
 </div>

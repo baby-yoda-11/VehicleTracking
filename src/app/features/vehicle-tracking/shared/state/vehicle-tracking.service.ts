@@ -47,7 +47,7 @@ export class VehicleTrackingService {
     }
 
     updateVehicle(vehicle: IVehicle): Observable<IVehicle> {
-        return this.http.put<IVehicle>(`https://localhost:44385/${Configuration.endPoints.vehicle.updateVehicle(vehicle.vehicleId)}`, vehicle)
+        return this.http.put<IVehicle>(`https://localhost:44385/${Configuration.endPoints.vehicle.updateVehicle}`, vehicle)
                         .pipe(tap((res: IVehicle) => {
                             return res;
                         }));
@@ -87,7 +87,7 @@ export class VehicleTrackingService {
     }
     
     updateDevice(device: IDevice): Observable<IDevice> {
-        return this.http.put<IDevice>(`https://localhost:44385/${Configuration.endPoints.device.updateDevice}/${device.deviceId}`, device)
+        return this.http.put<IDevice>(`https://localhost:44385/${Configuration.endPoints.device.updateDevice}`, device)
         .pipe(tap((res: IDevice) => {
             return res;
         }));

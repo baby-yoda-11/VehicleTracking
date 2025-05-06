@@ -62,6 +62,7 @@ export class DeviceComponent {
   }
 
   showAddDeviceForm(): void {
+    this.deviceForm.reset();
     this.isAddDeviceFormVisible = true;
   }
 
@@ -81,9 +82,9 @@ export class DeviceComponent {
   }
 
   deleteDevice(id: number): void {
-    const index = this.devices.findIndex((d) => d.Id === id);
+    const index = this.devices.findIndex((d) => d.id === id);
     if (index !== -1) {
-      this.vehicleTrackingService.deleteDevice(this.devices[index].Id).subscribe({
+      this.vehicleTrackingService.deleteDevice(this.devices[index].id).subscribe({
         next: () => {
           this.devices.splice(index, 1);
         }
@@ -95,9 +96,9 @@ export class DeviceComponent {
     if (this.deviceForm.valid) {
       const deviceData: IDevice = this.deviceForm.value;
       // deviceData.properties = JSON.parse(deviceData.properties); // Parse the JSON before submitting
-      deviceData.Id = this.selectedDeviceId || 0;
+      deviceData.id = this.selectedDeviceId || 0;
 
-      if (!deviceData.Id) {
+      if (!deviceData.id) {
         // Add new device
         this.vehicleTrackingService.addDevice(deviceData).subscribe({
           next: () => {
@@ -112,7 +113,7 @@ export class DeviceComponent {
         // Update existing device
         this.vehicleTrackingService.updateDevice(deviceData).subscribe({
           next: () => {
-            const index = this.devices.findIndex((d) => d.Id === deviceData.Id);
+            const index = this.devices.findIndex((d) => d.id === deviceData.id);
             if (index !== -1) {
               this.devices[index] = deviceData;
             }

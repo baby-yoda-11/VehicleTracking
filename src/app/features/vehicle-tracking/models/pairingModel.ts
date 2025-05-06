@@ -1,4 +1,4 @@
 export interface pairingModel {
     vehicleId: number;
-    deviceId: number;
+    deviceId: string;
 }

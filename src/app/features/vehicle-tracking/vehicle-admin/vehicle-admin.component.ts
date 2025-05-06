@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ElementRef } from '@angular/core';
 import { VehicleTrackingService } from '../shared/state/vehicle-tracking.service';
 import { pairingModel } from '../models/pairingModel';
 import { IVehicle } from '../models/vehicle';
@@ -20,8 +20,27 @@ export class VehicleAdminComponent implements OnInit {
 
   constructor(
     private vehicleTrackingService: VehicleTrackingService,
-    private toastr : ToastrService
-  ){}
+    private toastr: ToastrService,
+    private elementRef: ElementRef
+  ) {}
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (
+      this.availableDevices.length > 0 &&
+      !this.elementRef.nativeElement.querySelector('.modal').contains(target)
+    ) {
+      this.availableDevices = [];
+    }
+
+    if (
+      this.pairedDevices.length > 0 &&
+      !this.elementRef.nativeElement.querySelector('.modal').contains(target)
+    ) {
+      this.pairedDevices = [];
+    }
+  }
 
   ngOnInit(): void {
     this.fetchVehicles();
@@ -39,7 +58,11 @@ export class VehicleAdminComponent implements OnInit {
     this.selectedVehicleId = vehicleId;
     this.vehicleTrackingService.getUnpairedDevices().subscribe(
       (data) => {
-        this.availableDevices = data; // Assuming this endpoint returns available devices
+        if(data.length === 0) {
+          this.toastr.info('No unpaired devices available.', 'Info');
+          return;
+        }
+        this.availableDevices = data;
       }
     );
   }
@@ -48,12 +71,16 @@ export class VehicleAdminComponent implements OnInit {
     this.selectedVehicleId = vehicleId;
     this.vehicleTrackingService.getVehicleDevices(vehicleId).subscribe(
       (data) => {
+        if(data.length === 0) {
+          this.toastr.info('No paired devices available.', 'Info');
+          return;
+        }
         this.pairedDevices = data; // Assuming this endpoint returns paired devices
       }
     );
   }
 
-  assignDevice(deviceId: number): void {
+  assignDevice(deviceId: string): void {
     if (this.selectedVehicleId === null) return;
 
     const pairing: pairingModel = {
@@ -70,7 +97,7 @@ export class VehicleAdminComponent implements OnInit {
     );
   }
 
-  deassignDevice(deviceId: number): void {
+  deassignDevice(deviceId: string): void {
     if (this.selectedVehicleId === null) return;
 
     const pairing: pairingModel = {

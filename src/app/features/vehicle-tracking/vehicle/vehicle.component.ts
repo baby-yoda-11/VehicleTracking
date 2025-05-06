@@ -53,6 +53,7 @@ export class VehicleComponent {
     }
     
     showAddVehicleForm(): void {
+      this.vehicleForm.reset();
       this.isAddVehicleFormVisible = true;
     }
     
