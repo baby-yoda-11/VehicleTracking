@@ -5,6 +5,7 @@ import { tap } from 'rxjs';
 import { IReference } from '../models/reference';
 import { IDevice } from '../models/device';
 import { jsonValidator } from '../shared/validators/jsonValidator';
+import { noWhitespaceValidator } from '../shared/validators/noWhitespaceValidator';
 
 @Component({
   selector: 'app-device',
@@ -17,7 +18,6 @@ export class DeviceComponent {
   deviceTypes: IReference[] = [];
   devices: IDevice[] = [];
   isAddDeviceFormVisible = false;
-  isUpdate = false;
   selectedDeviceId?: number;
 
   constructor(
@@ -37,18 +37,24 @@ export class DeviceComponent {
       }
     });
 
-    this.vehicleTrackingService.getAllDevices().subscribe({
-      next: (x) => {
-        if (x) {
-          this.devices = x;
-      }
-    }});
+    this.loadDevices();
 
     this.createFormGroup();
   }
 
+  loadDevices() {
+    this.vehicleTrackingService.getAllDevices().subscribe({
+      next: (x) => {
+        if (x) {
+          this.devices = x;
+        }
+      }
+    });
+  }
+
   createFormGroup(): void {
     this.deviceForm = this.fb.group({
+      deviceId: ['', [Validators.required, noWhitespaceValidator(),Validators.maxLength(50)]],
       properties: ['', [Validators.required, jsonValidator, Validators.maxLength(150)]],
       name: ['', [Validators.required, Validators.maxLength(50)]],
       deviceType: [null, [Validators.required]]
@@ -56,7 +62,6 @@ export class DeviceComponent {
   }
 
   showAddDeviceForm(): void {
-    this.isUpdate = false;
     this.isAddDeviceFormVisible = true;
   }
 
@@ -65,9 +70,8 @@ export class DeviceComponent {
     this.deviceForm.reset();
   }
 
-  editDevice(deviceUId: number): void {
-    this.selectedDeviceId = deviceUId;
-    this.isUpdate = true;
+  editDevice(id : number): void {
+    this.selectedDeviceId = id;
     this.isAddDeviceFormVisible = true;
     this.vehicleTrackingService.getDeviceById(this.selectedDeviceId).subscribe({
       next: (x) => {
@@ -77,10 +81,9 @@ export class DeviceComponent {
   }
 
   deleteDevice(id: number): void {
-    const index = this.devices.findIndex((d) => d.deviceUId === id);
+    const index = this.devices.findIndex((d) => d.Id === id);
     if (index !== -1) {
-      this.devices[index].isDeleted = true;
-      this.vehicleTrackingService.deleteDevice(this.devices[index].deviceUId).subscribe({
+      this.vehicleTrackingService.deleteDevice(this.devices[index].Id).subscribe({
         next: () => {
           this.devices.splice(index, 1);
         }
@@ -92,13 +95,13 @@ export class DeviceComponent {
     if (this.deviceForm.valid) {
       const deviceData: IDevice = this.deviceForm.value;
       // deviceData.properties = JSON.parse(deviceData.properties); // Parse the JSON before submitting
-      deviceData.deviceUId = this.selectedDeviceId || 0;
+      deviceData.Id = this.selectedDeviceId || 0;
 
-      if (!deviceData.deviceUId) {
+      if (!deviceData.Id) {
         // Add new device
         this.vehicleTrackingService.addDevice(deviceData).subscribe({
           next: () => {
-            this.devices.push(deviceData);
+            this.loadDevices();
             this.hideAddDeviceForm();
           },
           error: (err) => {
@@ -109,7 +112,7 @@ export class DeviceComponent {
         // Update existing device
         this.vehicleTrackingService.updateDevice(deviceData).subscribe({
           next: () => {
-            const index = this.devices.findIndex((d) => d.deviceUId === deviceData.deviceUId);
+            const index = this.devices.findIndex((d) => d.Id === deviceData.Id);
             if (index !== -1) {
               this.devices[index] = deviceData;
             }

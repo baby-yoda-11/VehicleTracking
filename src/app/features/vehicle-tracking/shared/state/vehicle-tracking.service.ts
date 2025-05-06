@@ -53,8 +53,8 @@ export class VehicleTrackingService {
                         }));
     }
 
-    deleteVehicle(vehicle: IVehicle): Observable<IVehicle> {
-        return this.http.delete<IVehicle>(`https://localhost:44385/${Configuration.endPoints.vehicle.deleteVehicle(vehicle.vehicleId)}`);
+    deleteVehicle(vehicleId : number): Observable<IVehicle> {
+        return this.http.delete<IVehicle>(`https://localhost:44385/${Configuration.endPoints.vehicle.deleteVehicle(vehicleId)}`);
     }
 
     // Device-related functions
@@ -87,7 +87,7 @@ export class VehicleTrackingService {
     }
     
     updateDevice(device: IDevice): Observable<IDevice> {
-        return this.http.put<IDevice>(`https://localhost:44385/${Configuration.endPoints.device.updateDevice}/${device.deviceUId}`, device)
+        return this.http.put<IDevice>(`https://localhost:44385/${Configuration.endPoints.device.updateDevice}/${device.deviceId}`, device)
         .pipe(tap((res: IDevice) => {
             return res;
         }));

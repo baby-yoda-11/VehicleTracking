@@ -16,7 +16,6 @@ export class VehicleComponent {
   vehicleTypes: IReference[] = [];
   vehicles: IVehicle[] = [];
   isAddVehicleFormVisible = false;
-  isUpdate = false;
   selectedVehicleId?: number;
 
   constructor(
@@ -31,16 +30,20 @@ export class VehicleComponent {
             }
           }});
 
-      this.vehicleTrackingService.getAllVehicles().subscribe({
-          next: (x) => {
-            if(x){
-              this.vehicles = x;
-            }
-          }});
+      this.loadVehicles();
           
       this.createFormGroup();
     }
     
+    loadVehicles(){
+      this.vehicleTrackingService.getAllVehicles().subscribe({
+        next: (x) => {
+          if(x){
+            this.vehicles = x;
+          }
+        }});
+    }
+
     createFormGroup(): void {
       this.vehicleForm = this.fb.group({
         registrationNumber: ['', [Validators.required, Validators.maxLength(50)]],
@@ -50,7 +53,6 @@ export class VehicleComponent {
     }
     
     showAddVehicleForm(): void {
-      this.isUpdate = false;
       this.isAddVehicleFormVisible = true;
     }
     
@@ -61,7 +63,6 @@ export class VehicleComponent {
     
     editVehicle(vehicle: IVehicle): void {
       this.selectedVehicleId = vehicle.vehicleId;
-      this.isUpdate = true;
       this.isAddVehicleFormVisible = true;
       this.vehicleTrackingService.getVehicleById(this.selectedVehicleId).subscribe({
         next: (x) => {
@@ -73,8 +74,7 @@ export class VehicleComponent {
     deleteVehicle(id: number) {
       const index = this.vehicles.findIndex(v => v.vehicleId === id);
       if (index !== -1) {
-        this.vehicles[index].isDeleted = true;
-        this.vehicleTrackingService.deleteVehicle(this.vehicles[index]).subscribe({
+        this.vehicleTrackingService.deleteVehicle(id).subscribe({
           next: () => {
             this.vehicles.splice(index, 1);
           },
@@ -89,10 +89,10 @@ export class VehicleComponent {
       if (this.vehicleForm.valid) {
         const vehicleData: IVehicle = this.vehicleForm.value;
         vehicleData.vehicleId = this.selectedVehicleId || 0; // Set vehicleId to 0 for new vehicles
-        if (!this.isUpdate) {
+        if (!vehicleData.vehicleId) {
         this.vehicleTrackingService.addVehicle(vehicleData).subscribe({
           next: () => {
-            this.vehicles.push(vehicleData);
+            this.loadVehicles();
             this.hideAddVehicleForm();
           },
           error: (err) => {

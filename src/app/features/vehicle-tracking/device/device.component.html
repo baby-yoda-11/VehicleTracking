@@ -7,6 +7,13 @@
         <h2>Add device</h2>
         <form [formGroup]="deviceForm" (ngSubmit)="onSubmit()">
           <div>
+            <label for="deviceId">DeviceId</label>
+            <input id="deviceId" formControlName="deviceId" type="text" />
+            <div *ngIf="deviceForm.get('deviceId')?.hasError('whitespace') && deviceForm.get('deviceId')?.touched">
+              Device ID cannot contain only whitespace or start/end with whitespace.
+            </div>
+          </div>
+          <div>
             <label for="properties">Properties</label>
             <textarea id="properties" formControlName="properties"></textarea>
             <div *ngIf="deviceForm.get('properties')?.hasError('invalidJson') && deviceForm.get('properties')?.touched">
@@ -37,8 +44,8 @@
       <strong>{{ device.name }}</strong> - 
       Properties: {{ device.properties}} ,
       (Type: {{getDeviceType(device.deviceType)}} {{ device.deviceType }})
-      <button (click)="editDevice(device.deviceUId)">Edit</button>
-      <button (click)="deleteDevice(device.deviceUId)">Delete</button>
+      <button (click)="editDevice(device.Id)">Edit</button>
+      <button (click)="deleteDevice(device.Id)">Delete</button>
     </li>
   </ul>
 </div>

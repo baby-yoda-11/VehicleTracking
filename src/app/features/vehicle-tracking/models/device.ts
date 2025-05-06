@@ -1,8 +1,7 @@
 export interface IDevice {
-    deviceUId : number;
+    Id : number;
+    deviceId : string;
     properties : string;
     name : string;
     deviceType : number;
-    isActive : boolean;
-    isDeleted ?: boolean;
   }

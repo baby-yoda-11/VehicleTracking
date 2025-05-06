@@ -3,6 +3,4 @@ export interface IVehicle {
     registrationNumber : string;
     model : string;
     vehicleType : number;
-    isActive : boolean;
-    isDeleted ?: boolean;
   }
