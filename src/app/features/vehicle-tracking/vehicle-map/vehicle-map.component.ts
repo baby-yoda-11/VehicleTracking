@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { VehicleTrackingService } from '../shared/state/vehicle-tracking.service';
 import { SignalRService } from '../services/signalr.service';
 import { IVehicle } from '../models/vehicle';
+import { VehiclePosition } from '../models/vehicle-position.model';
 
 @Component({
   selector: 'app-vehicle-map',
@@ -11,12 +12,14 @@ import { IVehicle } from '../models/vehicle';
 })
 export class VehicleMapComponent {
   center: google.maps.LatLngLiteral = { lat: 17.4062, lng: 78.4691 };
-  zoom = 16;
+  zoom = 17;
   path: google.maps.LatLngLiteral[] = []; // Path for the vehicle
   vehicles : IVehicle[] = [];
   selectedVehicleId !: number;
   attachedDeviceIds : string[] = [];
   vehicleDetails : string = '';
+  lastVehiclePostion !: VehiclePosition;
+
   constructor(
     private vehicleTrackingService: VehicleTrackingService,
     private signalRService: SignalRService
@@ -55,17 +58,12 @@ export class VehicleMapComponent {
   formatVehicleDetails(vehicle: IVehicle , devices : string[]): string {    
     return `RegistrationNumber: ${vehicle.registrationNumber},\nVehicle Model: ${vehicle.model},\nDevices: ${devices.join(', ')}`;
   }
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if (changes['selectedVehicleId'] && changes['selectedVehicleId'].currentValue) {
-  //     this.fetchInitialPosition();
-  //     this.subscribeToPositionUpdates();
-  //   }
-  // }
 
   private fetchInitialPosition(): void {
     this.vehicleTrackingService.getLastVehiclePosition(this.selectedVehicleId).subscribe({
-      next: (vehicle) => {
-        this.center = { lat: vehicle.latitude, lng: vehicle.longitude };
+      next: (vehiclePosition) => {
+        this.lastVehiclePostion = vehiclePosition;
+        this.center = { lat: vehiclePosition.latitude, lng: vehiclePosition.longitude };
         this.path = [this.center];
       }
     });
@@ -74,13 +72,27 @@ export class VehicleMapComponent {
   private subscribeToPositionUpdates(): void {
     this.signalRService.positionUpdate$.subscribe(update => {
       if (update && update.vehicleId === this.selectedVehicleId) {
-        // Add the new position to the path
-        this.path = [...this.path, { lat: update.latitude, lng: update.longitude }];
-
-        // Update the map center to the latest position
         this.center = { lat: update.latitude, lng: update.longitude };
+        if(!this.isValidBreak(this.lastVehiclePostion.timestamp, update.timestamp))
+          {
+            this.path = [];
+          }
+        this.lastVehiclePostion = update;
+        this.path = [...this.path, { lat: update.latitude, lng: update.longitude }];
       }
     });
+  }
+
+  isValidBreak(date1: any, date2: any): boolean {
+  
+    const d1 = new Date(date1);
+    const d2 = new Date(date2);
+
+    const diffInMs = Math.abs(d1.getTime() - d2.getTime());
+    if (Math.floor(diffInMs / 60000) < 5) {
+      return true;
+    }
+    return false;
   }
 
   getVehicleIcon(): google.maps.Icon {
