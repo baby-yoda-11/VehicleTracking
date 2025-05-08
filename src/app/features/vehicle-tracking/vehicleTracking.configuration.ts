@@ -3,6 +3,7 @@ export const Controllers = {
     vehicle: '/vehicle',
     device: '/device',
     vehicleDevice: '/vehicleDevice',
+    geoLocation: '/geoLocation',
   };
 export const Configuration = {
     endPoints:{
@@ -27,6 +28,10 @@ export const Configuration = {
             getVehicleDevices : (id : number) => `${Api}${Controllers.vehicleDevice}/${id}`,
             assignDevice: `${Api}${Controllers.vehicleDevice}/assignDevice`,
             deassignDevice: `${Api}${Controllers.vehicleDevice}/deassignDevice`,
+        },
+        geolocation:{
+            getRecentVehiclePositions: (id : number) =>`${Api}${Controllers.geoLocation}/last10/${id}`,
+            getVehiclePosition: (id : number) =>`${Api}${Controllers.geoLocation}/${id}`,
         }
     }
 }

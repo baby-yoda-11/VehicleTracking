@@ -4,6 +4,7 @@ import { pairingModel } from '../models/pairingModel';
 import { IVehicle } from '../models/vehicle';
 import { IDevice } from '../models/device';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vehicle-admin',
@@ -16,12 +17,12 @@ export class VehicleAdminComponent implements OnInit {
   availableDevices: IDevice[] = [];
   pairedDevices: IDevice[] = [];
   selectedVehicleId: number | null = null;
-  trackingVehicleId: number | null = null;
 
   constructor(
     private vehicleTrackingService: VehicleTrackingService,
     private toastr: ToastrService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private router: Router
   ) {}
 
   @HostListener('document:click', ['$event'])
@@ -52,6 +53,10 @@ export class VehicleAdminComponent implements OnInit {
         this.vehicles = data;
       }
     );
+  }
+
+  openVehicleMap(){
+    this.router.navigate(['/vehicle-map']);
   }
 
   fetchAvailableDevices(vehicleId: number): void {
@@ -116,7 +121,6 @@ export class VehicleAdminComponent implements OnInit {
 
   onVehicleSelect(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
-    const vehicleId = selectElement?.value || '';
-    this.trackingVehicleId = parseInt(vehicleId, 10);
+    this.selectedVehicleId = Number(selectElement.value);
   }
 }

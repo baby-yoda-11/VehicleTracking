@@ -1,3 +1,4 @@
+<h1>Vehicle Admin</h1>
 <div class="vehicle-list">
   <h2>Vehicle List</h2>
   <ul>
@@ -32,17 +33,9 @@
 </div>
 <app-vehicle></app-vehicle>
 <app-device></app-device>
-<h2>Vehicle Tracking</h2>
-<div>
-  <label for="vehicleDropdown">Select a vehicle:</label>
-  <select id="vehicleDropdown" (change)="onVehicleSelect($event)">
-    <option value="" disabled selected>Select a vehicle</option>
-    <option *ngFor="let vehicle of vehicles" [value]="vehicle.vehicleId">
-      {{ vehicle.registrationNumber }}
-    </option>
-  </select>  
-</div>
 
-<div *ngIf="trackingVehicleId">
-  <app-vehicle-map [vehicleId]="trackingVehicleId"></app-vehicle-map>
-</div>
+
+<button (click)="openVehicleMap()">
+  <h2>Start Tracking Vehicle</h2>
+</button>
+

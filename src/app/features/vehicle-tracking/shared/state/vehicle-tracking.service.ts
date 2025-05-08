@@ -7,6 +7,7 @@ import { Configuration } from "../../vehicleTracking.configuration";
 import { IVehicle } from "../../models/vehicle";
 import { IDevice } from "../../models/device";
 import { pairingModel } from "../../models/pairingModel";
+import { VehiclePosition } from "../../models/vehicle-position.model";
 
 @Injectable({ providedIn: 'root' })
 export class VehicleTrackingService {
@@ -122,4 +123,23 @@ export class VehicleTrackingService {
         return this.http.post(`https://localhost:44385/${Configuration.endPoints.vehicleDevice.deassignDevice}`, vehicleDevice);
     }
 
+    getRecentVehiclePositions(id: number): Observable<VehiclePosition[]> {
+        return this.http
+            .get<VehiclePosition[]>(`https://localhost:44385/${Configuration.endPoints.geolocation.getRecentVehiclePositions(id)}`)
+            .pipe(
+                tap((res: VehiclePosition[]) => {
+                    return res;
+                })
+            );
+    }
+
+    getLastVehiclePosition(id: number): Observable<VehiclePosition> {
+        return this.http
+            .get<VehiclePosition>(`https://localhost:44385/${Configuration.endPoints.geolocation.getVehiclePosition(id)}`)
+            .pipe(
+                tap((res: VehiclePosition) => {
+                    return res;
+                })
+            );
+    }
 }

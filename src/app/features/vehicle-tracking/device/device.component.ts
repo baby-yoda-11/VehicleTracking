@@ -51,7 +51,7 @@ export class DeviceComponent {
       }
     });
   }
-
+  
   createFormGroup(): void {
     this.deviceForm = this.fb.group({
       deviceId: ['', [Validators.required, noWhitespaceValidator(),Validators.maxLength(50)]],
@@ -63,6 +63,7 @@ export class DeviceComponent {
 
   showAddDeviceForm(): void {
     this.deviceForm.reset();
+    this.deviceForm.controls['deviceId'].enable();
     this.isAddDeviceFormVisible = true;
   }
 
@@ -73,6 +74,7 @@ export class DeviceComponent {
 
   editDevice(id : number): void {
     this.selectedDeviceId = id;
+    this.deviceForm.controls['deviceId'].disable();
     this.isAddDeviceFormVisible = true;
     this.vehicleTrackingService.getDeviceById(this.selectedDeviceId).subscribe({
       next: (x) => {

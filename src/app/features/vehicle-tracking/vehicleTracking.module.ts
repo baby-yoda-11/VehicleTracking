@@ -8,6 +8,9 @@ import { DeviceComponent } from './device/device.component';
 import { VehicleAdminComponent } from './vehicle-admin/vehicle-admin.component';
 import { VehicleMapComponent } from './vehicle-map/vehicle-map.component';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
     declarations: [
@@ -20,7 +23,10 @@ import { GoogleMapsModule } from '@angular/google-maps';
         CommonModule,
         VehicleTrackingComponentsRoutingModule,
         ReactiveFormsModule,
-        GoogleMapsModule
+        GoogleMapsModule,
+        MatSidenavModule,
+        MatCardModule,
+        MatDividerModule
     ],
     providers: [
         provideHttpClient(withInterceptorsFromDi()),
